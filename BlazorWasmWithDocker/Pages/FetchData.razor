@@ -32,16 +32,39 @@ else
                     <td>@forecast.Summary</td>
                 </tr>
             }
+
+            @*@foreach (var toDo in toDos)
+            {
+                <tr>
+                    <td>@toDo.Title</td>
+                 
+                </tr>
+            }*@
+
+            @foreach (var company in companies)
+            {
+                <tr>
+                    <td>@company.Symbol</td>
+                    <td>@company.Name</td>
+                </tr>
+            }
+
         </tbody>
     </table>
 }
 
 @code {
     private WeatherForecast[]? forecasts;
+    //private ToDo[]? toDos;
+    private Company[]? companies;
 
     protected override async Task OnInitializedAsync()
     {
         forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+
+        //toDos = await Http.GetFromJsonAsync<ToDo[]>("https://cloud-run-service-gxnjs4mbgq-uc.a.run.app/firestoredata");
+    
+        companies = await Http.GetFromJsonAsync<Company[]>("https://cloud-run-service-gxnjs4mbgq-uc.a.run.app/firestoredata");
     }
 
     public class WeatherForecast
@@ -54,4 +77,15 @@ else
 
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     }
-}
+
+    public class Company {
+        public string Symbol { get; set; }
+        public string Cik { get; set; }
+        public string Name { get; set; }
+        public string SubSector { get; set;  }
+        public string Sector { get; set; }
+        public string HeadQuarters { get; set; }
+    } 
+    
+  }
+ 
