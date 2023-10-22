@@ -35,7 +35,7 @@
    - 'deploy'
    - 'blazor-wasm-with-docker'
    - '--image'
-   - 'gcr.io/$PROJECT_ID/blazor-wasm-with-docker'
+   - 'gcr.io/$PROJECT_ID/blazor-wasm-with-docker:$COMMIT_SHA'
    - '--region'
    - 'us-central1'
  images:
