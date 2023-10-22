@@ -14,16 +14,16 @@
 else
 {
     <table class="table">
-        <thead>
+        @*<thead>
             <tr>
                 <th>Date</th>
                 <th>Temp. (C)</th>
                 <th>Temp. (F)</th>
                 <th>Summary</th>
             </tr>
-        </thead>
+        </thead>*@
         <tbody>
-            @foreach (var forecast in forecasts)
+  @*          @foreach (var forecast in forecasts)
             {
                 <tr>
                     <td>@forecast.Date.ToShortDateString()</td>
@@ -31,7 +31,7 @@ else
                     <td>@forecast.TemperatureF</td>
                     <td>@forecast.Summary</td>
                 </tr>
-            }
+            }*@
 
             @*@foreach (var toDo in toDos)
             {
@@ -47,6 +47,7 @@ else
                     <td>@company.Symbol</td>
                     <td>@company.Name</td>
                     <td>@company.Cik</td>
+                    <td>@company.Sector</td>
                     <td>@company.SubSector</td>
                 </tr>
             }
