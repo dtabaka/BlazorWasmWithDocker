@@ -1,3 +1,4 @@
+ ##local command line version using "gcloud builds submit --region=us-central1 --config cloudbuild.yaml"
  #steps:
  ## Build the container image 
  #- name: 'gcr.io/cloud-builders/docker'
@@ -34,7 +35,7 @@
    - 'deploy'
    - 'blazor-wasm-with-docker'
    - '--image'
-   - 'gcr.io/$PROJECT_ID/blazor-wasm-with-docker: '
+   - 'gcr.io/$PROJECT_ID/blazor-wasm-with-docker'
    - '--region'
    - 'us-central1'
  images:
