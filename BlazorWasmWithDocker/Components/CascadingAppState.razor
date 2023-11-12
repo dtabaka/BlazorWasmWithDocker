@@ -1,0 +1,42 @@
+﻿
+<CascadingValue Value="@this">
+    @ChildContent
+</CascadingValue>
+
+@code {
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private string _searchTerm = string.Empty;
+    private string _accessToken = string.Empty;
+
+    public string SearchTerm
+    {
+        get
+        {
+            return _searchTerm;
+        }
+        set
+        {
+            _searchTerm = value;
+            StateHasChanged();
+        }
+    }
+
+    public string AccessToken
+    {
+        get
+        {
+            return _accessToken;
+        }
+        set
+        {
+            _accessToken = value;
+            StateHasChanged();
+        }
+    }
+
+}
+
+
