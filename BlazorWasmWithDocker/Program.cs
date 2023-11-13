@@ -48,4 +48,6 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 builder.Services.AddSingleton<AuthenticationState>();
 builder.Services.AddScoped<CascadingAuthenticationState>();
 
+builder.Services.AddAntDesign();
+
 await builder.Build().RunAsync();

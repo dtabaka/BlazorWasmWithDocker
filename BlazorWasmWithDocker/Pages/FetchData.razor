@@ -10,6 +10,9 @@
 @*@inject AuthenticationState authenticationState*@
 @inject CascadingAuthenticationState CascadingAuthenticationState
 
+@using AntDesign
+@using AntDesign.TableModels
+
 <PageTitle>Authenticate Demo</PageTitle>
 
 <h2>Authenticate to Azure AD & Call Secure API</h2> 
@@ -17,31 +20,53 @@
 <p>This component demonstrates authenticating against Azure AD in order to call a secure api.</p>
 
 <AuthorizeView>
-    <Authorized>
-        <h3>Hello, @context.User.Identity.Name !</h3>
+    <Authorized Context="Auth">
+        <h3>Hello, @Auth.User.Identity.Name !</h3>
        
         <button class="nav-link btn btn-link" @onclick="BeginLogout">Log out</button>
+
+         @if (companies == null)
+            {
+                <p><em>Loading Cards...</em></p>
+            }
+            else
+            {
+
+                <h3>Cards</h3>
+                <div style="background:#ECECEC; padding:30px">
+                    @foreach (var company in companies)
+                    {
+                        <Card Bordered="true" Title=@company.Name Style="width: 300px">
+                            <Body>
+                                <p>@company.SubSector</p>
+
+                            </Body>
+                        </Card>
+                    }
+                </div>
+            }
+        
 
         <table class="table">
             @if (companies == null)
             {
-                <p><em>Loading...</em></p>
+                <p><em>Loading Table...</em></p>
             }
             else
             {
                 <tbody>
-                    @if (companies.Count() > 0) {
-                        @foreach (var company in companies)
-                        {
-                            <tr>
-                                <td>@company.Symbol</td>
-                                <td>@company.Name</td>
-                                <td>@company.Cik</td>
-                                <td>@company.Sector</td>
-                                <td>@company.SubSector</td>
-                            </tr>
-                        }
-                    }
+                            
+                    <h3>DataTable</h3>
+
+                    <Table 
+                        TItem="Company"
+                        DataSource="@companies">
+                        <PropertyColumn Property="c=>c.Name" Sortable />
+                        <PropertyColumn Property="c=>c.Symbol" Sortable />
+                        <PropertyColumn Property="c=>c.Cik" Sortable />
+                        <PropertyColumn Property="c=>c.SubSector" Sortable />
+                    </Table>
+
                 </tbody>
             }
         </table>
