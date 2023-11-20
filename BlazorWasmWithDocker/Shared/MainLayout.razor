@@ -1,17 +1,69 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
+@* <Layout style="min-height:100vh;">
+    <Header Style="background-color:#82b440; position:fixed; z-index:100;width:100%;">Header</Header>
+    <Layout>
+        <Sider style="margin-top:50px;">
+            <NavMenu />
+        </Sider>
+        <Content Style="padding:20px;"> @Body</Content>
+    </Layout>
+    @*<Footer Style="background-color:cadetblue">Footer</Footer
+</Layout>
+
+https://themeforest.net/item/harington-creative-portfolio-theme/42929633
+*@
+<head>
+<style>
+.item1 { grid-area: header; }
+
+.item2 {
+    grid-area: menu;
+    background-color: #273d23;
+    box-shadow: 5px 0 15px 10px #aaaaaa;
+/*    min-width:300px;
+    max-width:300px;*/
+ }
+.item3 { grid-area: main; 
+    padding:40px;
+   /*background-color:gray*/
+}
+.item4 { grid-area: right; }
+.item5 { grid-area: footer; }
+
+.grid-container {
+  display: grid;
+    grid-template-columns: 300px 1fr; /* Adjust the width of the left menu as needed */
+  grid-template-areas:
+/*    'menu header header header header header'
+    'menu main main main main main'
+    'menu footer footer footer footer footer';*/
+    'menu main ';
+   
+ /* gap: 10px;*/
+           /* background-color: #fafafa;*/
+  /*padding: 10px;*/
+  height: 100vh;
+}
+
+.grid-container > div {
+/*  background-color: rgba(255, 255, 255, 0.8);*/
+/*  text-align: center;*/
+/*  padding: 20px;*/
+ /* font-size: 30px;*/
+}
+</style>
+</head>
+<body>
+
+<div class="grid-container">
+@*  <div class="item1">Header</div>*@
+    <div class="item2">
         <NavMenu />
     </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+    <div class="item3">@Body</div>  
+  @*<div class="item4">Right</div>*@
+  @*<div class="item5">Footer</div>*@
 </div>
+
+</body>

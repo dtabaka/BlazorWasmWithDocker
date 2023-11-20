@@ -1,0 +1,27 @@
+﻿@page "/authentication/login-callback-UNUESED"
+@inject NavigationManager Navigation
+
+@code {
+    [Parameter] public string ReturnUrl { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await HandleAzureADAuthentication();
+    }
+
+    private async Task HandleAzureADAuthentication()
+    {
+        // Your Azure AD authentication logic here...
+
+        // After successful authentication, redirect the user back to the original page
+        if (!string.IsNullOrEmpty(ReturnUrl))
+        {
+            Navigation.NavigateTo(ReturnUrl);
+        }
+        else
+        {
+            // If ReturnUrl is not provided, redirect to a default page
+            Navigation.NavigateTo("/fetchdata");
+        }
+    }
+}
