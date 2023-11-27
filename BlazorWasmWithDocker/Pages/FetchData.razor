@@ -2,7 +2,8 @@
 @*@attribute [Authorize]*@
 @using System.Security.Claims
 @using System.Net.Http.Headers;
-@inject HttpClient Http
+@using Models;
+@inject HttpClient httpClient;
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IAccessTokenProvider TokenProvider
 @inject NavigationManager Navigation
@@ -33,7 +34,6 @@
             }
             else
             {
-
                 <h3>Cards</h3>
                 <div style="background:#ECECEC; padding:20px; display:flex; flex-direction:row;">
                     @foreach (var company in companies)
@@ -44,7 +44,6 @@
                             </TitleTemplate>
                             <Body>
                                 <p>@company.SubSector</p>
-
                             </Body>
                         </Card>
                     }
@@ -60,9 +59,7 @@
             else
             {
                 <tbody>
-                            
                     <h3>DataTable</h3>
-
                     <Table 
                         TItem="Company"
                         DataSource="@companies">
@@ -71,7 +68,6 @@
                         <PropertyColumn Property="c=>c.Cik" Sortable />
                         <PropertyColumn Property="c=>c.SubSector" Sortable />
                     </Table>
-
                 </tbody>
             }
         </table>
@@ -102,15 +98,6 @@
         //await GetAuthorizationToken2();
     }
 
-    public class Company {
-        public string Symbol { get; set; }
-        public string Cik { get; set; }
-        public string Name { get; set; }
-        public string SubSector { get; set;  }
-        public string Sector { get; set; }
-        public string HeadQuarters { get; set; }
-    } 
-
     protected async Task CallSecureApi() {
 
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -126,9 +113,9 @@
 
             accessToken = cascadingAppState.AccessToken;
 
-            Http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             //Http.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
-            companies = await Http.GetFromJsonAsync<Company[]>("https://firestore-apis---secured-by-azuread-api-gateway-1bkt07r7.uc.gateway.dev/firestoredata-cloud-run");
+            companies = await httpClient.GetFromJsonAsync<Company[]>("https://firestore-apis---secured-by-azuread-api-gateway-1bkt07r7.uc.gateway.dev/firestoredata-cloud-run");
         }
     }
 
@@ -147,9 +134,7 @@
             //accessToken = token2.Value;
             cascadingAppState.AccessToken = token2.Value;
         }
-
     }
-
 
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
 

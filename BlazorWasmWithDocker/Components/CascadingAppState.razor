@@ -1,4 +1,6 @@
-﻿
+﻿@using Models;
+@inject HttpClient httpClient;
+
 <CascadingValue Value="@this">
     @ChildContent
 </CascadingValue>
@@ -10,6 +12,15 @@
 
     private string _searchTerm = string.Empty;
     private string _accessToken = string.Empty;
+    private Tomato[]? _tomatoes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Perform asynchronous initialization tasks here
+        _tomatoes = await httpClient.GetFromJsonAsync<Tomato[]>("https://firestore-gateway-details-1bkt07r7.uc.gateway.dev/tomato-list");
+        Tomatoes = _tomatoes;
+
+    }
 
     public string SearchTerm
     {
@@ -36,6 +47,26 @@
             StateHasChanged();
         }
     }
+
+    public Tomato[] Tomatoes
+    {
+        get
+        {
+            return _tomatoes;
+        }
+        set
+        {
+            _tomatoes = value;
+           NotifyStateChanged(this, "Tomatoes");
+           /*StateHasChanged()*/
+        }
+    }
+
+    //Event handler to pass component and property that has changed!
+    public event Action<ComponentBase, string> StateChanged;
+
+    //This is called above when property is updated!
+    private void NotifyStateChanged(ComponentBase Source, string Property) => StateChanged?.Invoke(Source, Property);
 
 }
 

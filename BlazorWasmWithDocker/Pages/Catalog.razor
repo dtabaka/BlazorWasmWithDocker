@@ -1,4 +1,8 @@
 ﻿@page "/catalog"
+@using Models
+@using AntDesign
+@using AntDesign.TableModels
+
 
 <PageTitle>Catalog</PageTitle>
 
@@ -6,6 +10,102 @@
 
 <p>Demo search and results..</p>
 
+
+@if (_tomatoes == null)
+{
+    <p><em>Loading Cards...</em></p>
+}
+else
+{
+    <h3>Cards</h3>
+    <div style="display:flex; justify-content:center">
+        <Input Placeholder="Basic usage" @bind-Value="@txtValue" Style="width:300px;"/>
+    </div>
+    <div style="padding:20px; display:flex; flex-direction:row; flex-wrap:wrap;">
+        
+        @if (_tomatoes == null)
+        {
+            <p><em>Loading Cards...</em></p>
+        }
+        else
+        {
+            @foreach (var tomato in _tomatoes)
+            {
+                <div @onclick="open" style="display:flex;">
+                    <Card Bordered="true" Title=@tomato.Variety style="width: 300px; margin:10px; cursor:pointer;" >
+                        <TitleTemplate>
+                            <Icon Type="info-circle" Theme="fill" /> @tomato.Variety
+                        </TitleTemplate>
+                        <Body>
+                            <p>@tomato.Description</p>
+                        </Body>
+                    </Card>
+                </div>
+            }
+        }
+       
+    </div>
+
+    <div>
+        <Drawer Closable="true" @bind-Visible="visible" Placement="right" Title='("Basic Drawer")'>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+            <p>Some contents...</p>
+        </Drawer>
+    </div>
+
+
+}
+
 @code {
+    [CascadingParameter] public CascadingAppState cascadingAppState { get; set; }
+
+    private Tomato[]? _tomatoes;
+
+    string txtValue { get; set; }
+
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        //// Keywords to search
+        //string[] keywords = { "Lap", "Key" };
+
+        //// Perform keyword search using LINQ
+        //var searchResults = products
+        //    .Where(product => keywords.Any(keyword => product.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
+        //    .ToList();
+
+        if (cascadingAppState.Tomatoes != null)
+            _tomatoes = cascadingAppState.Tomatoes.Where(t => t.Description.Contains("purple", StringComparison.OrdinalIgnoreCase)).ToArray();
+
+        cascadingAppState.StateChanged += async (Source, Property) => await AppState_StateChanged(Source, Property);
+
+    }
+
+    private async Task AppState_StateChanged(ComponentBase Source, string Property)
+    {
+        if (Source != this)
+        {
+            _tomatoes = cascadingAppState.Tomatoes.Where(t => t.Description.Contains("purple", StringComparison.OrdinalIgnoreCase)).ToArray();
+
+            //await InvokeAsync(StateHasChanged);
+            StateHasChanged();
+        }
+    }
+
+    public void Dispose()
+    {
+        cascadingAppState.StateChanged -= async (Source, Property) => await AppState_StateChanged(Source, Property);
+    }
+
+    bool visible = false;
+
+    void open()
+    {
+        this.visible = true;
+    }
+
 
 }
