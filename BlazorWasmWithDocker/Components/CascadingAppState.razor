@@ -1,11 +1,16 @@
 ﻿@using Models;
-@inject HttpClient httpClient;
+@using Services.Interfaces;
+@inject IDataService DataService;
 
 <CascadingValue Value="@this">
     @ChildContent
 </CascadingValue>
 
 @code {
+
+    //This also works..
+    //[Inject]
+    //private IDataService DataService { get; set; }
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
@@ -16,10 +21,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Perform asynchronous initialization tasks here
-        _tomatoes = await httpClient.GetFromJsonAsync<Tomato[]>("https://firestore-gateway-details-1bkt07r7.uc.gateway.dev/tomato-list");
-        Tomatoes = _tomatoes;
-
+        var tomatoes = await DataService.GetTomatoesAsync();
+        Tomatoes = tomatoes.ToArray();
     }
 
     public string SearchTerm
@@ -31,7 +34,7 @@
         set
         {
             _searchTerm = value;
-            StateHasChanged();
+            NotifyStateChanged(this, "SearchTerm");
         }
     }
 
@@ -57,13 +60,13 @@
         set
         {
             _tomatoes = value;
-           NotifyStateChanged(this, "Tomatoes");
-           /*StateHasChanged()*/
+            NotifyStateChanged(this, "Tomatoes");
         }
     }
 
     //Event handler to pass component and property that has changed!
     public event Action<ComponentBase, string> StateChanged;
+
 
     //This is called above when property is updated!
     private void NotifyStateChanged(ComponentBase Source, string Property) => StateChanged?.Invoke(Source, Property);

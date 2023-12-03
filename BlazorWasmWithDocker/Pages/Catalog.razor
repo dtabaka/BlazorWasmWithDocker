@@ -1,15 +1,11 @@
 ﻿@page "/catalog"
 @using Models
 @using AntDesign
-@using AntDesign.TableModels
-
+@implements IDisposable
+@inject AppStateService AppStateService
+@inject IDataService DataService
 
 <PageTitle>Catalog</PageTitle>
-
-<h1>Catalog</h1>
-
-<p>Demo search and results..</p>
-
 
 @if (_tomatoes == null)
 {
@@ -17,11 +13,9 @@
 }
 else
 {
-    <h3>Cards</h3>
-    <div style="display:flex; justify-content:center">
-        <Input Placeholder="Basic usage" @bind-Value="@txtValue" Style="width:300px;"/>
-    </div>
-    <div style="padding:20px; display:flex; flex-direction:row; flex-wrap:wrap;">
+    <CatalogSearch></CatalogSearch>
+
+    <div class="search-results">
         
         @if (_tomatoes == null)
         {
@@ -29,46 +23,44 @@ else
         }
         else
         {
-            @foreach (var tomato in _tomatoes)
-            {
-                <div @onclick="open" style="display:flex;">
-                    <Card Bordered="true" Title=@tomato.Variety style="width: 300px; margin:10px; cursor:pointer;" >
-                        <TitleTemplate>
-                            <Icon Type="info-circle" Theme="fill" /> @tomato.Variety
-                        </TitleTemplate>
-                        <Body>
-                            <p>@tomato.Description</p>
-                        </Body>
-                    </Card>
-                </div>
+            if (_tomatoes.Length == 0) {
+                <p>No results matching search criteria</p>
+            } else {
+                @foreach (var tomato in _tomatoes)
+                {
+                    <div @onclick="() => showDetails(tomato.DocumentId)" style="display:flex;">
+                        <Card Bordered="true" Title=@tomato.Variety style="width: 300px; margin:10px; cursor:pointer;" >
+                            <TitleTemplate>
+                                <Icon Type="info-circle" Theme="fill" /> @tomato.Variety
+                            </TitleTemplate>
+                            <Body>
+                                <p>@tomato.Description</p>
+                            </Body>
+                        </Card>
+                    </div>
+                }
             }
         }
        
     </div>
 
-    <div>
-        <Drawer Closable="true" @bind-Visible="visible" Placement="right" Title='("Basic Drawer")'>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-            <p>Some contents...</p>
-        </Drawer>
-    </div>
-
+    <CatalogDetail Visible=@visible @ref="catalogDetailRef" OnDetailClosed="ResetVisible"></CatalogDetail>
 
 }
 
 @code {
-    [CascadingParameter] public CascadingAppState cascadingAppState { get; set; }
+
+    //[CascadingParameter] public CascadingAppState cascadingAppState { get; set; }
 
     private Tomato[]? _tomatoes;
+    private CatalogDetail? catalogDetailRef;
 
-    string txtValue { get; set; }
+    [Parameter]
+    public string SearchTerm { get; set; }
 
-    
-
+    //protected override void OnInitialized()
     protected override async Task OnInitializedAsync()
     {
-
         //// Keywords to search
         //string[] keywords = { "Lap", "Key" };
 
@@ -77,35 +69,92 @@ else
         //    .Where(product => keywords.Any(keyword => product.Name.Contains(keyword, StringComparison.OrdinalIgnoreCase)))
         //    .ToList();
 
-        if (cascadingAppState.Tomatoes != null)
-            _tomatoes = cascadingAppState.Tomatoes.Where(t => t.Description.Contains("purple", StringComparison.OrdinalIgnoreCase)).ToArray();
+        //Handle in case of refresh since this will fire before the app state is loaded. Else if navigating back, just reload the data from state.
+        //if ( cascadingAppState.Tomatoes != null) {
+        //    if (!String.IsNullOrWhiteSpace(cascadingAppState.SearchTerm)){
+        //        _tomatoes = filterListBySearchTerm();
+        //    } else {
+        //        _tomatoes = cascadingAppState.Tomatoes;
+        //    }
+        //}
 
-        cascadingAppState.StateChanged += async (Source, Property) => await AppState_StateChanged(Source, Property);
+        if (AppStateService.Tomatoes == null) {
+            var tomatoes = await DataService.GetTomatoesAsync();
+            _tomatoes = tomatoes.ToArray();
+            AppStateService.UpdateTomatoList(this, _tomatoes);
+        } else {
+            if (!String.IsNullOrWhiteSpace(AppStateService.SearchTerm))
+            {
+                _tomatoes = filterListBySearchTerm();
+            } else {
+                _tomatoes = AppStateService.Tomatoes;
+            }
+        }
 
+        //AppStateService.StateChanged += async (Source, Property) => await AppState_StateChanged(Source, Property);
+
+        AppStateService.StateChanged += StateChanged;
     }
+
+    private void StateChanged(object Source, string Property)
+    {
+        if (Source != this)
+        {
+            if (Property == "Tomatoes")
+            {
+                //_tomatoes = cascadingAppState.Tomatoes;
+                _tomatoes = AppStateService.Tomatoes;
+                StateHasChanged();
+            }
+
+            if (Property == "SearchTerm")
+            {
+                _tomatoes = filterListBySearchTerm();
+                StateHasChanged();
+            }
+        }
+    }
+
 
     private async Task AppState_StateChanged(ComponentBase Source, string Property)
     {
         if (Source != this)
         {
-            _tomatoes = cascadingAppState.Tomatoes.Where(t => t.Description.Contains("purple", StringComparison.OrdinalIgnoreCase)).ToArray();
+            if (Property == "Tomatoes") {
+                //_tomatoes = cascadingAppState.Tomatoes;
+                _tomatoes = AppStateService.Tomatoes;
+                await InvokeAsync(StateHasChanged);
+            }
 
-            //await InvokeAsync(StateHasChanged);
-            StateHasChanged();
+            if (Property == "SearchTerm") {
+                _tomatoes = filterListBySearchTerm();
+                await InvokeAsync(StateHasChanged);
+            }
         }
     }
 
-    public void Dispose()
-    {
-        cascadingAppState.StateChanged -= async (Source, Property) => await AppState_StateChanged(Source, Property);
+    private Tomato[] filterListBySearchTerm() {
+        //return cascadingAppState.Tomatoes.Where(t => t.Description.Contains(cascadingAppState.SearchTerm, StringComparison.OrdinalIgnoreCase)).ToArray();
+        var tomatoes = AppStateService.Tomatoes.Where(t => t.Description.Contains(AppStateService.SearchTerm, StringComparison.OrdinalIgnoreCase)).ToArray();
+        return tomatoes;
+    }
+
+    void IDisposable.Dispose() {
+        //cascadingAppState.StateChanged -= async (Source, Property) => await AppState_StateChanged(Source, Property);
+        //AppStateService.StateChanged -= async (Source, Property) => await AppState_StateChanged(Source, Property);
+        AppStateService.StateChanged -= StateChanged;
     }
 
     bool visible = false;
 
-    void open()
+    void showDetails(string documentId)
     {
         this.visible = true;
+        catalogDetailRef.Id = documentId;
     }
 
-
+    private void ResetVisible()
+    {
+        this.visible = false;
+    }
 }

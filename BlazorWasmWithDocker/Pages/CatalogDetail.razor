@@ -1,0 +1,29 @@
+﻿@using AntDesign
+
+ 
+<Drawer Closable="true" @bind-Visible="Visible" Placement="right" Title='("Product Details")' OnClose="HandleDrawerClose">
+    <h3>Product Title</h3>
+    <p>Id:@Id</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+    <p>Some contents...</p>
+</Drawer>
+ 
+
+@code {
+    [Parameter]
+    public bool Visible { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnDetailClosed { get; set; }
+
+    private void HandleDrawerClose()
+    {
+        // Handle the closing of the drawer
+
+        OnDetailClosed.InvokeAsync(true);
+    }
+}

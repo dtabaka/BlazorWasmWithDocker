@@ -1,4 +1,6 @@
 using BlazorWasmWithDocker;
+using BlazorWasmWithDocker.Services;
+using BlazorWasmWithDocker.Services.Interfaces;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
@@ -45,8 +47,11 @@ builder.Services.AddMsalAuthentication(options =>
 });
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+builder.Services.AddScoped<IDataService, DataService>();
 builder.Services.AddSingleton<AuthenticationState>();
 builder.Services.AddScoped<CascadingAuthenticationState>();
+ 
+builder.Services.AddSingleton<AppStateService>();
 
 builder.Services.AddAntDesign();
 

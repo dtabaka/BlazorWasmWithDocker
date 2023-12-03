@@ -1,12 +1,7 @@
-﻿namespace BlazorWasmWithDocker.Services
-{
-    using System.Threading.Tasks;
-        public interface ITokenService
-    {
-        Task SetTokenAsync(string token);
-        Task<string> GetTokenAsync();
-    }
+﻿using BlazorWasmWithDocker.Services.Interfaces;
 
+namespace BlazorWasmWithDocker.Services
+{
     public class TokenService : ITokenService
     {
         private string token;

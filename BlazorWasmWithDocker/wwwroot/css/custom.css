@@ -1,0 +1,21 @@
+﻿body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
+
+.ant-card-head {
+    background: #273d23;
+    color: white;
+    border-bottom: 0px;
+    /*border-radius: 2px 2px 0 0;*/
+}
+
+.ant-card {
+    background: silver;
+    border-radius: 2px;
+    transition: transform .3s; /* Animation */
+}
+
+.ant-card:hover {
+    transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
