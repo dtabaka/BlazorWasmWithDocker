@@ -27,7 +27,6 @@ namespace BlazorWasmWithDocker.Services
             NotifyStateChanged(Source, "AccessToken");
         }
 
-
         //Event handler to pass component and property that has changed!
         public event Action<ComponentBase, string>? StateChanged;
 

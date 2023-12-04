@@ -5,7 +5,6 @@ namespace BlazorWasmWithDocker.Services
     public class TokenService : ITokenService
     {
         private string token;
-
         public async Task SetTokenAsync(string newToken)
         {
             token = newToken;

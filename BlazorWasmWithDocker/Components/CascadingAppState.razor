@@ -67,10 +67,6 @@
     //Event handler to pass component and property that has changed!
     public event Action<ComponentBase, string> StateChanged;
 
-
     //This is called above when property is updated!
     private void NotifyStateChanged(ComponentBase Source, string Property) => StateChanged?.Invoke(Source, Property);
-
 }
-
-

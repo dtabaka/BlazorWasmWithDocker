@@ -19,15 +19,13 @@
 
 <h1>Authenticate to Azure AD & Call Secure API</h1> 
 
-<p>This component demonstrates authenticating against Azure AD in order to call a secure api.</p>
+<p>This component demonstrates authenticating against Azure AD in order to access secure content.</p>
 
 <AuthorizeView>
     <Authorized Context="Auth">
         <h3>Hello, @Auth.User.Identity.Name !</h3>
-
-       @* <LoginDisplay></LoginDisplay>*@
-       
-        <button class="nav-link btn btn-link" @onclick="BeginLogout">Log out</button>
+     
+        <Button type="primary" @onclick="BeginLogout">Log out</Button>
 
          @if (companies == null)
             {
@@ -79,14 +77,14 @@
 
     </Authorized>
     <NotAuthorized>
-        <a href="authentication/login?returnUrl=@Uri.EscapeDataString(Navigation.Uri)">Log in</a>
+        <a href="authentication/login?returnUrl=@Uri.EscapeDataString(Navigation.Uri)">
+            <Button type="primary">Log in</Button>    
+        </a>
     </NotAuthorized>
 </AuthorizeView>
 
 
 @code {
-
-    //[CascadingParameter] public CascadingAppState cascadingAppState { get; set; }
 
     private Company[]? companies;
 
@@ -95,8 +93,6 @@
     protected override async Task OnInitializedAsync()
     {
         await CallSecureApi();
-        //await GetAuthorizationToken();
-        //await GetAuthorizationToken2();
     }
 
     protected async Task CallSecureApi() {
@@ -107,34 +103,19 @@
 
         if (user.Identity.IsAuthenticated)
         {
-            //Works...UN-authenticated version...
-            //companies = await Http.GetFromJsonAsync<Company[]>("https://cloud-run-service-gxnjs4mbgq-uc.a.run.app/firestoredata");
-
             await GetAuthorizationToken();
-
-            //accessToken = cascadingAppState.AccessToken;
             accessToken = AppStateService.AccessToken;
-
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            //Http.DefaultRequestHeaders.Add("Authorization", "Bearer " + accessToken);
             companies = await httpClient.GetFromJsonAsync<Company[]>("https://firestore-apis---secured-by-azuread-api-gateway-1bkt07r7.uc.gateway.dev/firestoredata-cloud-run");
         }
     }
 
     protected async Task GetAuthorizationToken()
     {
-        var tokenResult = await TokenProvider.RequestAccessToken(
-        //
-        //new AccessTokenRequestOptions
-        //{
-        //        Scopes = new[] { "api://d488b2ac-94e8-48b6-b280-32f747ea28ce/SampleScope.Read" }
-        //}
-        );
+        var tokenResult = await TokenProvider.RequestAccessToken();
 
         if (tokenResult.TryGetToken(out var token2))
         {
-            //accessToken = token2.Value;
-            //cascadingAppState.AccessToken = token2.Value;
             AppStateService.UpdateAccesToken(this, token2.Value);
         }
     }
@@ -143,7 +124,6 @@
 
     protected async Task GetAuthorizationToken2()
     {
-
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
 
@@ -163,16 +143,6 @@
                 accessToken = accessTokenClaim.Value;
             }
         }
-
-        //var surname = user.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value;
-
-        //var user = authenticationState.User;
-        //var accessTokenClaim = user.FindFirst("access_token");
-
-        //if (accessTokenClaim != null)
-        //{
-        //    accessToken = accessTokenClaim.Value;
-        //}
     }
 
   

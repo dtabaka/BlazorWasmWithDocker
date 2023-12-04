@@ -6,37 +6,19 @@
     <h2>Catalog</h2>
     <div class="search-input-container">
         <input type="text" placeholder="Enter search criteria" @bind-value="@searchTerm" @bind-value:event="oninput" @onkeyup="@HandleKeyUp" />
-        <Button @onclick="HandleButtonClick">Filter</Button>
     </div>
 </div>
 
 @code {
 
     string searchTerm = string.Empty;
-
-    //[CascadingParameter] 
-    //public CascadingAppState cascadingAppState { get; set; }
-
-    //[Parameter]
-    //public EventCallback<string> OnSearchTermChanged { get; set; }
-
     private Timer? debounceTimer;
-
-
-    private void HandleButtonClick()
-    {
-        // Your button click event handling logic here
-        AppStateService.UpdateSearchTerm(this, "Yellow");
-    }
-
 
     protected override void OnInitialized()
     {
         debounceTimer = new Timer(1000);
         debounceTimer.Elapsed += OnUserFinishedTyping;
         debounceTimer.AutoReset = false;
-
-        //searchTerm = cascadingAppState.SearchTerm ?? "";
         searchTerm = AppStateService.SearchTerm ?? "";
     }
 
@@ -49,10 +31,7 @@
     }
 
     private void OnUserFinishedTyping(Object source, ElapsedEventArgs e)
-    {
-        //Update cascading parameter...
-        //cascadingAppState.SearchTerm = searchTerm;
-        
+    {      
         AppStateService.UpdateSearchTerm(this, searchTerm);
     }
 
