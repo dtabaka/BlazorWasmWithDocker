@@ -8,6 +8,7 @@ namespace BlazorWasmWithDocker.Services
         //Repeat for each property you need to track...
         public string? SearchTerm { get; private set; }
         public Tomato[]? Tomatoes { get; private set; }
+        public string? AccessToken { get; private set; }
 
          //Repeat for each property you update...
         public void UpdateSearchTerm(ComponentBase Source, string SearchTerm)
@@ -20,6 +21,12 @@ namespace BlazorWasmWithDocker.Services
             this.Tomatoes = Tomatoes;
             NotifyStateChanged(Source, "Tomatoes");
         }
+        public void UpdateAccesToken(ComponentBase Source, string AccessToken)
+        {
+            this.AccessToken = AccessToken;
+            NotifyStateChanged(Source, "AccessToken");
+        }
+
 
         //Event handler to pass component and property that has changed!
         public event Action<ComponentBase, string>? StateChanged;

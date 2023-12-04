@@ -38,7 +38,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddMsalAuthentication(options =>
 {
     builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
-    options.ProviderOptions.LoginMode = "redirect";
+    options.ProviderOptions.LoginMode = "popup";
     //These all seem to return jwt token...not sure the difference yet...
     options.ProviderOptions.DefaultAccessTokenScopes.Add("openid");
     options.ProviderOptions.DefaultAccessTokenScopes.Add("offline_access");
