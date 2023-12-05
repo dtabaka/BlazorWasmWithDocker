@@ -20,9 +20,31 @@
     transform: scale(1.05); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
 }
 
-.center-spinner {
+.center-loading-indicator {
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh; /* Set the height of the container to 100% of the viewport height */
+    font-weight:bold;
+    font-size:24px;
+}
+
+.ant-spin-lg .ant-spin-dot i {
+    width: 28px;
+    height: 28px;
+}
+
+.ant-spin-dot-item {
+    background-color: #2d5e16;
+}
+
+.ant-spin-lg .ant-spin-dot {
+    font-size: 64px;
+}
+
+.ant-btn-primary {
+    color: #fff;
+    border-color: #273d23;
+    background: #273d23;
+    border-radius:5px;
 }

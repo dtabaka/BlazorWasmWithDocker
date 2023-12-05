@@ -9,7 +9,9 @@
 
 @if (_tomatoes == null)
 {
-    <div class="center-spinner"><Spin /></div>
+    <div class="center-loading-indicator">
+        <Spin size="large" />
+    </div>
 }
 else
 {
@@ -19,7 +21,7 @@ else
         
         @if (_tomatoes == null)
         {
-            <div class="center-spinner"><Spin /></div>
+            <div class="center-loading-indicator"><Spin /></div>
         }
         else
         {

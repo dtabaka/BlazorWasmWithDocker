@@ -1,14 +1,4 @@
-﻿.page-header {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    background-color: white;
-    border-bottom: solid 1px silver;
-    padding: 30px;
-    font-size: 20px;
-    z-index:10;
-}
-
+﻿
 .search-results {
     padding:20px; 
     display:flex; 

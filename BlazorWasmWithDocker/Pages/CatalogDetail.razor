@@ -1,14 +1,70 @@
 ﻿@using AntDesign
+@using Models
+@inject AppStateService AppStateService
 
  
 <Drawer Closable="true" @bind-Visible="Visible" Placement="right" Title='("Product Details")' OnClose="HandleDrawerClose">
     <h3>Product Title</h3>
     <p>Id:@Id</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
+    <table>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+
+    </table>
 </Drawer>
  
+@*DaysToMaturity
+"75"
+(string)
+
+
+Description
+"Developed by Campbell Soup Company in 1928. Short, bushy, compact, plant. Yields 7 oz., dark-red tomatoes with thick walls. Excellent for canning.Paste"
+(string)
+
+
+FruitSet
+"SD"
+(string)
+
+
+Id
+"94"
+(string)
+
+
+Type
+"H"
+(string)
+
+
+Variety
+"Rutgers"
+*@
+
+
 
 @code {
     [Parameter]
@@ -19,6 +75,14 @@
 
     [Parameter]
     public EventCallback<bool> OnDetailClosed { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // This method is called when parameters are set, asynchronously
+        Console.WriteLine($"OnParametersSetAsync called for {Id}");
+
+        var tomato = AppStateService.Tomatoes.FirstOrDefault(t => t.DocumentId == Id);
+    }
 
     private void HandleDrawerClose()
     {

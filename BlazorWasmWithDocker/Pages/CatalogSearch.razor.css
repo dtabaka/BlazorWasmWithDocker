@@ -1,4 +1,15 @@
-﻿.search-input-container {
+﻿.page-header {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    border-bottom: solid 1px silver;
+    padding: 10px 20px 20px 20px;
+    font-size: 20px;
+    z-index: 10;
+}
+
+.search-input-container {
     display: flex;
     justify-content: center;
 }

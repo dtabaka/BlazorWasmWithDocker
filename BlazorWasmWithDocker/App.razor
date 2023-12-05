@@ -1,4 +1,8 @@
-﻿<CascadingAuthenticationState>
+﻿@using Models
+@inject AppStateService AppStateService
+@inject IDataService DataService
+
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
@@ -24,4 +28,14 @@
     </Router>
 </CascadingAuthenticationState>
 
-                      
+@code {
+
+    //private Tomato[]? _tomatoes;
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    var tomatoes = await DataService.GetTomatoesAsync();
+    //    _tomatoes = tomatoes.ToArray();
+    //    AppStateService.UpdateTomatoList(this, _tomatoes);
+    //}
+}
