@@ -1,72 +1,36 @@
 ﻿@using AntDesign
 @using Models
 @inject AppStateService AppStateService
-
  
-<Drawer Closable="true" @bind-Visible="Visible" Placement="right" Title='("Product Details")' OnClose="HandleDrawerClose">
-    <h3>Product Title</h3>
-    <p>Id:@Id</p>
-    <table>
+<Drawer Width="500" Closable="true" @bind-Visible="Visible" Placement="right" Title='("Product Details")' OnClose="HandleDrawerClose">
+    <table class="product-details">
         <tr>
-            <td></td>
-            <td></td>
+            <td>Variety:</td>
+            <td>@_tomato?.Variety</td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
+            <td>Description:</td>
+            <td>@_tomato?.Description</td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
+            <td>Fruit Set:</td>
+            <td>@_tomato?.FruitSet</td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
+            <td>Days to Maturity:</td>
+            <td>@_tomato?.DaysToMaturity</td>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
+            <td>Type:</td>
+            <td>@_tomato?.Type</td>
         </tr>
-        <tr>
-            <td></td>
-            <td></td>
-        </tr>
-
     </table>
 </Drawer>
  
-@*DaysToMaturity
-"75"
-(string)
-
-
-Description
-"Developed by Campbell Soup Company in 1928. Short, bushy, compact, plant. Yields 7 oz., dark-red tomatoes with thick walls. Excellent for canning.Paste"
-(string)
-
-
-FruitSet
-"SD"
-(string)
-
-
-Id
-"94"
-(string)
-
-
-Type
-"H"
-(string)
-
-
-Variety
-"Rutgers"
-*@
-
-
-
 @code {
+
+    private Tomato _tomato;
+
     [Parameter]
     public bool Visible { get; set; }
 
@@ -81,7 +45,7 @@ Variety
         // This method is called when parameters are set, asynchronously
         Console.WriteLine($"OnParametersSetAsync called for {Id}");
 
-        var tomato = AppStateService.Tomatoes.FirstOrDefault(t => t.DocumentId == Id);
+        _tomato = AppStateService.Tomatoes.FirstOrDefault(t => t.DocumentId == Id);
     }
 
     private void HandleDrawerClose()

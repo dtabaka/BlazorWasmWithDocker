@@ -1,0 +1,11 @@
+﻿<div class="page-header">
+    <!-- Render the content provided by the parent component -->
+    @ChildContent
+</div>
+
+@code {
+    // Declare a RenderFragment property
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}
+ 

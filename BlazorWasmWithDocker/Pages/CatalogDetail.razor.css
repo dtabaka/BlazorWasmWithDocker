@@ -1,0 +1,6 @@
+﻿.product-details tr td:first-child {
+    font-weight:bold;
+    white-space: nowrap;
+    padding-right:10px;
+    vertical-align:top;
+}
