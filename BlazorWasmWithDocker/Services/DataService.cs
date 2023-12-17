@@ -1,4 +1,5 @@
 ﻿
+using System.Net.Http;
 using System.Net.Http.Json;
 using BlazorWasmWithDocker.Models;
 using BlazorWasmWithDocker.Services.Interfaces;
@@ -19,6 +20,12 @@ namespace BlazorWasmWithDocker.Services
             //Look at typed clients instead?
             _httpClient.DefaultRequestHeaders.Clear();
             return await _httpClient.GetFromJsonAsync<IEnumerable<Tomato>>("https://firestore-gateway-details-1bkt07r7.uc.gateway.dev/tomato-list");
+        }
+
+        public async Task<IEnumerable<GrowingTip>> GetGrowingTipsAsync()
+        {
+            _httpClient.DefaultRequestHeaders.Clear();
+            return await _httpClient.GetFromJsonAsync<IEnumerable<GrowingTip>>("https://firestore-apis---secured-by-azuread-api-gateway-1bkt07r7.uc.gateway.dev/firestoredata-growingtips");
         }
     }
 }

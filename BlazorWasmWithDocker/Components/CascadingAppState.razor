@@ -1,6 +1,7 @@
 ﻿@using Models;
 @using Services.Interfaces;
 @inject IDataService DataService;
+@using BlazorWasmWithDocker.Shared;
 
 <CascadingValue Value="@this">
     @ChildContent
@@ -34,7 +35,7 @@
         set
         {
             _searchTerm = value;
-            NotifyStateChanged(this, "SearchTerm");
+            NotifyStateChanged(this, Enums.StateProperty.SearchTerm);
         }
     }
 
@@ -60,13 +61,14 @@
         set
         {
             _tomatoes = value;
-            NotifyStateChanged(this, "Tomatoes");
+            NotifyStateChanged(this, Enums.StateProperty.Tomatoes);
         }
     }
 
     //Event handler to pass component and property that has changed!
-    public event Action<ComponentBase, string> StateChanged;
+    //public event Action<ComponentBase, string> StateChanged;
+    public event Action<ComponentBase, Enums.StateProperty> StateChanged;
 
     //This is called above when property is updated!
-    private void NotifyStateChanged(ComponentBase Source, string Property) => StateChanged?.Invoke(Source, Property);
+    private void NotifyStateChanged(ComponentBase Source, Enums.StateProperty Property) => StateChanged?.Invoke(Source, Property);
 }

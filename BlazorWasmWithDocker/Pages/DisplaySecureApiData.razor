@@ -1,0 +1,147 @@
+﻿@page "/displaysecureapidata"
+@using System.Security.Claims
+@using System.Net.Http.Headers;
+@using Models;
+@inject HttpClient httpClient;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IAccessTokenProvider TokenProvider
+@inject NavigationManager Navigation
+@inject SignOutSessionStateManager SignOutManager
+@inject AppStateService AppStateService
+
+@using AntDesign
+@using AntDesign.TableModels
+
+<PageTitle>Authenticate Demo</PageTitle>
+
+<PageSubHeader>
+    <h2>Authenticate to Azure AD & Call Secure API</h2>
+</PageSubHeader>
+
+
+<AuthorizeView>
+    <Authorized Context="Auth">
+        <h3>Hello, <b>@Auth.User.Identity.Name</b>. You've successfully logged in to view secure content.</h3>
+        <p>
+            <Button type="primary" @onclick="BeginLogout">Log out</Button>
+        </p>
+        <p>
+            @if (_growingTips == null)
+            {
+                <div class="center-loading-indicator">
+                    <Spin size="large" />
+                </div>
+            }
+            else
+            {
+                <div style="margin-top:20px;">
+                    <Collapse DefaultActiveKey="@(new[]{"1"})" Accordion>
+                        @foreach (var tip in _growingTips)
+                        {
+                            <Panel Header="@tip.Problem" Key="@tip.DocumentId">
+                                <p>@tip.Solution</p>
+                            </Panel>
+                        }
+                    </Collapse>
+                </div>
+            }
+        </p>        
+    </Authorized>
+    <NotAuthorized>
+        <p>
+            This component demonstrates authenticating against Azure AD in order to access a secure api.
+        </p>
+        <p>
+            To authenticate, use test credentials <b>demouser@davidatabaka.onmicrosoft.com</b> & <b>Pa$s885731</b> for the username & password.
+        </p>
+        <p>
+            <a href="authentication/login?returnUrl=@Uri.EscapeDataString(Navigation.Uri)">
+                <Button type="primary">Log in</Button>    
+            </a>
+        </p>
+
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code {
+
+    private GrowingTip[]? _growingTips;
+
+    private string accessToken = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CallSecureApi();
+    }
+
+    protected async Task CallSecureApi() {
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            if (AppStateService.GrowingTips == null)
+            {
+                //var growingTips = await DataService.GetGrowingTipsAsync();
+                await GetAuthorizationToken();
+                accessToken = AppStateService.AccessToken;
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                var growingTips = await httpClient.GetFromJsonAsync<GrowingTip[]>("https://firestore-apis---secured-by-azuread-api-gateway-1bkt07r7.uc.gateway.dev/firestoredata-growingtips");
+               
+                _growingTips = growingTips.ToArray();
+
+                AppStateService.UpdateGrowingTips(this, _growingTips);
+            }
+            else
+            {
+                _growingTips = AppStateService.GrowingTips;
+            }
+         }
+    }
+
+    protected async Task GetAuthorizationToken()
+    {
+        var tokenResult = await TokenProvider.RequestAccessToken();
+
+        if (tokenResult.TryGetToken(out var token2))
+        {
+            AppStateService.UpdateAccesToken(this, token2.Value);
+        }
+    }
+
+    private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
+
+    protected async Task GetAuthorizationToken2()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        claims = user.Claims;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            // Get the access token from the user's claims
+
+            var accessTokenClaim = user.FindFirst("id_token");
+            var accessTokenClaim2 = user.FindFirst("access_token");
+            var preferredUserName = user.FindFirst("preferred_username");
+            var accessToken = user.FindFirst("http://schemas.microsoft.com/identity/claims/access_token")?.Value;
+
+            if (accessTokenClaim != null)
+            {
+                accessToken = accessTokenClaim.Value;
+                Console.WriteLine(accessToken);
+            }
+        }
+    }
+      
+    private async Task BeginLogout(MouseEventArgs args)
+    {
+        await SignOutManager.SetSignOutState();
+        Navigation.NavigateTo("authentication/logout");
+    }
+}
+ 

@@ -24,7 +24,9 @@ else
         
         @if (_tomatoes == null)
         {
-            <div class="center-loading-indicator"><Spin /></div>
+            <div class="center-loading-indicator">
+                <Spin size="large" />
+            </div>
         }
         else
         {
@@ -71,7 +73,7 @@ else
 
     private async Task InitData() {
 
-         if (AppStateService.Tomatoes == null)
+        if (AppStateService.Tomatoes == null)
         {
             var tomatoes = await DataService.GetTomatoesAsync();
             _tomatoes = tomatoes.ToArray();
@@ -90,17 +92,17 @@ else
         }
     }
 
-    private void StateChanged(object Source, string Property)
+    private void StateChanged(object Source, Enums.StateProperty Property)
     {
         if (Source != this)
         {
-            if (Property == "Tomatoes")
+            if (Property == Enums.StateProperty.Tomatoes)
             {
                 _tomatoes = AppStateService.Tomatoes;
                 StateHasChanged();
             }
 
-            if (Property == "SearchTerm")
+            if (Property == Enums.StateProperty.SearchTerm)
             {
                 _tomatoes = filterListBySearchTerm();
                 StateHasChanged();
