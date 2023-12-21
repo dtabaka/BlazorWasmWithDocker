@@ -4,7 +4,7 @@
 }
 
 .ant-card-head {
-    background: #273d23;
+    background: #607D3B;
     color: white;
     border-bottom: 0px;
     /*border-radius: 2px 2px 0 0;*/
@@ -56,5 +56,15 @@
 }
 
 .ant-btn-primary:hover {
-    background:green;
+    background: #6cbb3c;
+}
+
+.logo-text {
+    margin-left:10px;
+    color:#fff; 
+    font-size:24pt;
+    margin-top:auto; 
+    margin-bottom:auto;
+    font-family:Oswald;
+    font-weight:300;
 }

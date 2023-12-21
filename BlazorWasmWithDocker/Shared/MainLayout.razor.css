@@ -5,10 +5,29 @@
     flex-direction: column;
 }
 
-main {
-    flex: 1;
+ 
+
+.menu {
+    grid-area: menu;
+    background-color: #607D3B;
+    box-shadow: 5px 0 15px 10px #aaaaaa; 
+   /* flex: 1;*/
 }
 
+.main {
+    grid-area: main;
+    padding-left: 40px;
+    padding-right: 40px;
+    overflow-y: auto;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 300px 1fr; /* Adjust the width of the left menu as needed */
+    grid-template-areas:
+        'menu main';
+    height: 100vh;
+}
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
 }
@@ -22,20 +41,20 @@ main {
     align-items: center;
 }
 
-    .top-row ::deep a, .top-row ::deep .btn-link {
-        white-space: nowrap;
-        margin-left: 1.5rem;
-        text-decoration: none;
-    }
+.top-row ::deep a, .top-row ::deep .btn-link {
+    white-space: nowrap;
+    margin-left: 1.5rem;
+    text-decoration: none;
+}
 
-    .top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
-        text-decoration: underline;
-    }
+.top-row ::deep a:hover, .top-row ::deep .btn-link:hover {
+    text-decoration: underline;
+}
 
-    .top-row ::deep a:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+.top-row ::deep a:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 @media (max-width: 640.98px) {
     .top-row:not(.auth) {

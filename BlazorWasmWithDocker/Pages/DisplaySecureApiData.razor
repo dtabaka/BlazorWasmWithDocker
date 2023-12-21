@@ -21,7 +21,9 @@
 
 <AuthorizeView>
     <Authorized Context="Auth">
-        <h3>Hello, <b>@Auth.User.Identity.Name</b>. You've successfully logged in to view secure content.</h3>
+        <p>
+            <h3>Hello, <b>@Auth.User.Identity.Name</b>. You've successfully logged in to view secure content.</h3>
+        </p>
         <p>
             <Button type="primary" @onclick="BeginLogout">Log out</Button>
         </p>
@@ -35,14 +37,21 @@
             else
             {
                 <div style="margin-top:20px;">
-                    <Collapse DefaultActiveKey="@(new[]{"1"})" Accordion>
-                        @foreach (var tip in _growingTips)
-                        {
-                            <Panel Header="@tip.Problem" Key="@tip.DocumentId">
-                                <p>@tip.Solution</p>
-                            </Panel>
-                        }
-                    </Collapse>
+
+                    <p>
+                        <h3>The <b>Growing Tips</b> are now available by appending a bearer token to the secure api endpoint...</h3>
+                    </p>
+                    <p>
+                        <Collapse DefaultActiveKey="@(new[]{"1"})" Accordion>
+                            @foreach (var tip in _growingTips)
+                            {
+                                <Panel Header="@tip.Problem" Key="@tip.DocumentId">
+                                    <p>@tip.Solution</p>
+                                </Panel>
+                            }
+                        </Collapse>
+                    </p>
+                   
                 </div>
             }
         </p>        
