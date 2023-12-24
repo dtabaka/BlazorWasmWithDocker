@@ -111,7 +111,15 @@ else
     }
 
     private Tomato[] filterListBySearchTerm() {
-       return AppStateService.Tomatoes.Where(t => t.Description.Contains(AppStateService.SearchTerm, StringComparison.OrdinalIgnoreCase)).ToArray();
+
+        //Single keyword search...
+        //return AppStateService.Tomatoes.Where(t => t.Description.Contains(AppStateService.SearchTerm, StringComparison.OrdinalIgnoreCase)).ToArray();
+       
+        //Multiple keyword search...
+        var searchTerms = AppStateService.SearchTerm.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+        return AppStateService.Tomatoes
+            .Where(tomato => searchTerms.Any(searchTerm => tomato.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))).ToArray();
     }
 
     void IDisposable.Dispose() {

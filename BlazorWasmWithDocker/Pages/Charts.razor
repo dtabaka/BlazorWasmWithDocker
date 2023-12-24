@@ -1,4 +1,6 @@
 ﻿@page "/charts"
+@using AntDesign.Charts
+@using Title = AntDesign.Charts.Title
 
 <PageTitle>Charts</PageTitle>
 
@@ -15,6 +17,54 @@
     <li>Largest varieties (Bubble chart w/ colors red, pink, purple, green, yellow, orange)</li>
 </ul>
 
+<h3>Bar Chart</h3>
+ <AntDesign.Charts.Column Data="data1" Config="config1" />
+
 @code {
+
+   object[] data1 =
+   {
+        new
+        {
+            type = "Early Girl",
+            sales = 38
+        },
+        new
+        {
+            type = "Chef's Choice",
+            sales = 52
+        },
+        new
+        {
+            type = "Beef Steak",
+            sales = 61
+        },
+        
+    };
+
+    ColumnConfig config1 = new ColumnConfig
+        {
+            Title = new Title
+            {
+                Visible = true,
+                Text = "Test"
+            },
+            ForceFit = true,
+            Padding = "auto",
+            XField = "type",
+            YField = "sales",
+            Meta = new
+            {
+                Type = new
+                {
+                    Alias = "Variety"
+                },
+                Sales = new
+                {
+                    Alias = "Days to Maturity"
+                }
+            },
+                Color = new[] { "#6cbb3c", "#607D3B", "#2d5e16" }
+        };
 
 }

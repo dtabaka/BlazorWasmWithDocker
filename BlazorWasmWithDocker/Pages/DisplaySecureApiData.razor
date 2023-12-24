@@ -99,7 +99,7 @@
                 accessToken = AppStateService.AccessToken;
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
                 var growingTips = await httpClient.GetFromJsonAsync<GrowingTip[]>("https://firestore-apis---secured-by-azuread-api-gateway-1bkt07r7.uc.gateway.dev/firestoredata-growingtips");
-               
+
                 _growingTips = growingTips.ToArray();
 
                 AppStateService.UpdateGrowingTips(this, _growingTips);
@@ -108,16 +108,17 @@
             {
                 _growingTips = AppStateService.GrowingTips;
             }
-         }
+        }
     }
 
     protected async Task GetAuthorizationToken()
     {
         var tokenResult = await TokenProvider.RequestAccessToken();
 
-        if (tokenResult.TryGetToken(out var token2))
+        if (tokenResult.TryGetToken(out var token))
         {
-            AppStateService.UpdateAccesToken(this, token2.Value);
+            Console.WriteLine(token.Value);
+            AppStateService.UpdateAccesToken(this, token.Value);
         }
     }
 
