@@ -1,0 +1,33 @@
+﻿@using Models
+@inject AppStateService AppStateService
+@inject IDataService DataService
+
+@if (isLoaded)
+{
+    @ChildContent
+}
+else
+{
+    <div class="center-loading-indicator">
+        Retrieving Data...
+    </div>
+}
+
+@code {
+    bool isLoaded;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private Tomato[]? _tomatoes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await Task.Delay(4000); // TODO actual initialization job
+        var tomatoes = await DataService.GetTomatoesAsync();
+        _tomatoes = tomatoes.ToArray();
+        AppStateService.UpdateTomatoList(this, _tomatoes);
+
+        isLoaded = true;
+    }
+}
