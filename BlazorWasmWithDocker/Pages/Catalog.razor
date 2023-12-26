@@ -36,7 +36,7 @@ else
                 @foreach (var tomato in _tomatoes)
                 {
                     <div @onclick="() => showDetails(tomato.DocumentId)" style="display:flex;">
-                        <Card Bordered="true" Title=@tomato.Variety style="width: 300px; margin:10px; cursor:pointer;" >
+                        <Card Bordered="true" Title=@tomato.Variety >
                             <TitleTemplate>
                                 <Icon Type="info-circle" Theme="fill" /> @tomato.Variety
                             </TitleTemplate>
@@ -119,7 +119,9 @@ else
         var searchTerms = AppStateService.SearchTerm.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
         return AppStateService.Tomatoes
-            .Where(tomato => searchTerms.Any(searchTerm => tomato.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))).ToArray();
+            .Where(tomato => searchTerms.Any(searchTerm => 
+                tomato.Variety.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
+                tomato.Description.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))).ToArray();
     }
 
     void IDisposable.Dispose() {

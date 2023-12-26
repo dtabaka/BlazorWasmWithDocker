@@ -1,6 +1,7 @@
 ﻿@page "/charts"
 @using AntDesign.Charts
 @using Title = AntDesign.Charts.Title
+@inject AppStateService AppStateService
 
 <PageTitle>Charts</PageTitle>
 
@@ -8,63 +9,49 @@
     <h2>Charts</h2>
 </PageSubHeader>
 
-<p>Demo charting components (Coming Soon)</p>
-
-<ul>
+@*<h3>Demo charting components</h3>
+*@
+@*<ul>
     <li>Days to Maturity (Calendar chart)</li>
     <li>Hottest pepper scale (Gauge)</li>
     <li>Tomatoes by usage (Bar chart)</li>
     <li>Largest varieties (Bubble chart w/ colors red, pink, purple, green, yellow, orange)</li>
-</ul>
+</ul>*@
 
-<h3>Bar Chart</h3>
- <AntDesign.Charts.Column Data="data1" Config="config1" />
+<h3>Bar Chart Demo - Days to Maturity</h3>
+ <AntDesign.Charts.Column Data="data" Config="config" />
 
 @code {
 
-   object[] data1 =
-   {
-        new
-        {
-            type = "Early Girl",
-            sales = 38
-        },
-        new
-        {
-            type = "Chef's Choice",
-            sales = 52
-        },
-        new
-        {
-            type = "Beef Steak",
-            sales = 61
-        },
-        
-    };
+    object[] data;
 
-    ColumnConfig config1 = new ColumnConfig
+    protected override async Task OnInitializedAsync()
+    {
+        data = AppStateService.Tomatoes.Where(t => t.FruitSet.ToLower() == "indeterminate").OrderBy(t => t.DaysToMaturity).Select(t => new
         {
-            Title = new Title
-            {
-                Visible = true,
-                Text = "Test"
-            },
-            ForceFit = true,
-            Padding = "auto",
+            type = t.Variety,
+            maturity = t.DaysToMaturity
+        }).ToArray();
+    }
+
+    ColumnConfig config = new ColumnConfig
+        {
+            AutoFit = true,
             XField = "type",
-            YField = "sales",
+            YField = "maturity",
             Meta = new
             {
                 Type = new
                 {
-                    Alias = "Variety"
+                    Alias = "Variety",
                 },
+                
                 Sales = new
                 {
                     Alias = "Days to Maturity"
                 }
             },
-                Color = new[] { "#6cbb3c", "#607D3B", "#2d5e16" }
+            Color = new[] { "#6cbb3c", "#607D3B", "#2d5e16" }
         };
 
 }

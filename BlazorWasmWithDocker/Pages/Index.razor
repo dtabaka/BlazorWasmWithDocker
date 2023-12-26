@@ -49,9 +49,25 @@
     </ul>
 </p>
 <p>
-    The architecture diagram below gives a visual of how it all works together.
-</p>
-<p style="text-align:center">
-    <img src="/images/GcpArchitecture.jpg" height="526" width="966" />
+    The architecture diagram gives a visual of how it all works together.
 </p>
 
+
+<Button Type="primary" OnClick="@(()=>{ _visible = true; })">
+    View Diagram
+</Button>
+<Modal Title="Site Architecture Diagram"
+       @bind-Visible="@_visible"
+       Maximizable="@true"
+       Centered="@true"
+       DefaultMaximized="@true">
+    <p style="text-align:center">
+        <img src="/images/GcpArchitecture.jpg" height="526" width="966" />
+    </p>
+</Modal>
+
+@code {
+
+    bool _visible = false;
+
+}

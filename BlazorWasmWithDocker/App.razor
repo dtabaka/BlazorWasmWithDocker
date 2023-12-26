@@ -30,12 +30,12 @@
 
 @code {
 
-    //private Tomato[]? _tomatoes;
+    private Tomato[]? _tomatoes;
 
-    //protected override async Task OnInitializedAsync()
-    //{
-    //    var tomatoes = await DataService.GetTomatoesAsync();
-    //    _tomatoes = tomatoes.ToArray();
-    //    AppStateService.UpdateTomatoList(this, _tomatoes);
-    //}
+    protected override async Task OnInitializedAsync()
+    {
+        var tomatoes = await DataService.GetTomatoesAsync();
+        _tomatoes = tomatoes.ToArray();
+        AppStateService.UpdateTomatoList(this, _tomatoes);
+    }
 }
