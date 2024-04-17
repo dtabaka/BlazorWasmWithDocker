@@ -2,6 +2,9 @@
 @using System.Security.Claims
 @using System.Net.Http.Headers;
 @using Models;
+@using AntDesign
+@using AntDesign.TableModels
+@using static BlazorWasmWithDocker.Shared.Constants;
 @inject HttpClient httpClient;
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IAccessTokenProvider TokenProvider
@@ -9,18 +12,13 @@
 @inject SignOutSessionStateManager SignOutManager
 @inject AppStateService AppStateService
 @inject Microsoft.Extensions.Configuration.IConfiguration config
-@inject Microsoft.Extensions.Configuration.IConfiguration config
 @inject IConfiguration Configuration
-@using AntDesign
-@using AntDesign.TableModels
 
 <PageTitle>Authenticate Demo</PageTitle>
 
 <PageSubHeader>
     <h2>Authenticate to Azure AD & Call Secure API</h2>
 </PageSubHeader>
-
-
 <AuthorizeView>
     <Authorized Context="Auth">
         <p>
@@ -95,10 +93,17 @@
             if (AppStateService.GrowingTips == null)
             {
                 //var growingTips = await DataService.GetGrowingTipsAsync();
+
                 await GetAuthorizationToken();
                 accessToken = AppStateService.AccessToken;
+
+                //Ways to access configuration...
+                //var tomatoEndPoint1 = Configuration.GetSection(Constants.Endpoints.GrowingTips);
+                //var tomatoEndPoint2 = Configuration[Constants.Endpoints.GrowingTips];
+                //var tomatoEndPoint3 = config[Constants.Endpoints.GrowingTips];
+
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-                var growingTips = await httpClient.GetFromJsonAsync<GrowingTip[]>("https://firestore-apis---secured-by-azuread-api-gateway-1bkt07r7.uc.gateway.dev/firestoredata-growingtips");
+                var growingTips = await httpClient.GetFromJsonAsync<GrowingTip[]>(config[Endpoints.GrowingTips]);
 
                 _growingTips = growingTips.ToArray();
 

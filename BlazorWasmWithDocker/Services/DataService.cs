@@ -1,34 +1,35 @@
 ﻿
-using System.Net.Http;
 using System.Net.Http.Json;
 using BlazorWasmWithDocker.Models;
 using BlazorWasmWithDocker.Services.Interfaces;
+using static BlazorWasmWithDocker.Shared.Constants;
 
 namespace BlazorWasmWithDocker.Services
 {
     public class DataService : IDataService
     {
         private readonly HttpClient _httpClient;
-        public DataService(HttpClient httpClient)
+        private readonly IConfiguration _configuration;
+
+        public DataService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
+            _configuration = configuration;
         }
 
         public async Task<IEnumerable<Tomato>> GetTomatoesAsync()
         {
-            //Clear() is a quick fix/hack in case you login first before loading the catalog from firestore, it add headers causing CORS errors.
-            //Look at typed clients instead?
-            _httpClient.DefaultRequestHeaders.Clear();
-            return await _httpClient.GetFromJsonAsync<IEnumerable<Tomato>>("https://firestore-gateway-details-1bkt07r7.uc.gateway.dev/tomato-list");
+            var tomatoEndpoint = _configuration[Endpoints.TomatoList];
+            _httpClient.DefaultRequestHeaders.Clear();  //Clear() is a quick fix/hack in case you login first before loading the catalog from firestore, it add headers causing CORS errors. Look at typed clients instead?
+            return await _httpClient.GetFromJsonAsync<IEnumerable<Tomato>>(tomatoEndpoint);
         }
 
         public async Task<IEnumerable<GrowingTip>> GetGrowingTipsAsync()
         {
+            var growingTipsEndpoint = _configuration[Endpoints.GrowingTips];
             _httpClient.DefaultRequestHeaders.Clear();
-            return await _httpClient.GetFromJsonAsync<IEnumerable<GrowingTip>>("https://firestore-apis---secured-by-azuread-api-gateway-1bkt07r7.uc.gateway.dev/firestoredata-growingtips");
+            return await _httpClient.GetFromJsonAsync<IEnumerable<GrowingTip>>(growingTipsEndpoint);
         }
     }
 }
-
-
 

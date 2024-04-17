@@ -1,6 +1,7 @@
 ﻿@page "/"
-
-<PageTitle>Index</PageTitle>
+@inject Microsoft.Extensions.Configuration.IConfiguration config
+@inject IConfiguration Configuration
+<PageTitle>Home</PageTitle>
 
 <PageSubHeader>
     <h2> Google Cloud & Blazor Demo</h2>
@@ -50,6 +51,12 @@
 </p>
 <p>
     The architecture diagram gives a visual of how it all works together.
+ 
+  @*  Access config...*@
+ @*   <b> @config["TomatoList"]</b>
+    <br />
+    <b> @Configuration["TomatoList"]</b>
+    *@
 </p>
 
 
@@ -69,5 +76,13 @@
 @code {
 
     bool _visible = false;
+
+    protected override void OnInitialized()
+    {
+        //Access configs...
+        //var endpoint = Configuration.GetSection("TomatoList");
+        //Console.WriteLine(endpoint.Value);
+
+    }
 
 }
