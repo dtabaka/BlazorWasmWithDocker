@@ -47,7 +47,7 @@ steps:
   args: [
     'build',
     '-t',
-    'us-central1-docker.pkg.dev/$PROJECT_ID/blazor-wasm-with-docker:$COMMIT_SHA',
+    'us-central1-docker.pkg.dev/$PROJECT_ID/blazor-repo/blazor-wasm-with-docker:$COMMIT_SHA',
     './BlazorWasmWithDocker'
   ]
 
@@ -55,7 +55,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: [
     'push',
-    'us-central1-docker.pkg.dev/$PROJECT_ID/blazor-wasm-with-docker:$COMMIT_SHA'
+    'us-central1-docker.pkg.dev/$PROJECT_ID/blazor-repo/blazor-wasm-with-docker:$COMMIT_SHA'
   ]
 
 # Deploy container image to Cloud Run
@@ -66,10 +66,10 @@ steps:
     - 'deploy'
     - 'blazor-wasm-with-docker'
     - '--image'
-    - 'us-central1-docker.pkg.dev/$PROJECT_ID/blazor-wasm-with-docker:$COMMIT_SHA'
+    - 'us-central1-docker.pkg.dev/$PROJECT_ID/blazor-repo/blazor-wasm-with-docker:$COMMIT_SHA'
     - '--region'
     - 'us-central1'
 
 images:
-  - 'us-central1-docker.pkg.dev/$PROJECT_ID/blazor-wasm-with-docker:$COMMIT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/blazor-repo/blazor-wasm-with-docker:$COMMIT_SHA'
 
